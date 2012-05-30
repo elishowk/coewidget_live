@@ -1,0 +1,12 @@
+#livespeakerform {
+    display: none;
+}
+#livemanagebutton {
+    display: none;
+}
+.ui-livemanager-banner {
+	display: none;
+}
+.ui-livemanager-banner-onair {
+	display: block;
+}
