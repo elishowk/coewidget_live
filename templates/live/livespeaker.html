@@ -1,0 +1,15 @@
+{% load static i18n %}
+<div id="{{ id }}" class="overflow-hidden ui-livespeaker-form">
+    <div class="form-comment-fake-input live-form-comment">
+        <div class="form-comment-fake-input-holder live-form-comment-holder">
+            <textarea class="ui-livespeaker-input" rows="3" cols="5" maxlength="600" placeholder="{% trans 'Make an annoucement' %}"></textarea>
+            <button type="button">effacer</button>
+        </div>
+        <span class="ui-livespeaker-input-numChar">600</span>
+        <span class="timeline_service_icons">
+            <a href="javascript:void(0)" title="Partagez cette annonce sur Facebook" alt="Facebook" class="service_icon" id="ui-postform-share-facebook" data-original-title="Facebook">facebook</a>
+            <a href="javascript:void(0)" title="Partagez cette annonce sur Twitter" alt="Twitter" class="service_icon" id="ui-postform-share-twitter" data-original-title="Twitter">twitter</a>
+        </span>
+    </div>
+    <button type="button" class="ui-livespeaker-submit">Envoyer</button>
+</div>

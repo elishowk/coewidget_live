@@ -35,8 +35,6 @@ $.uce.PseudoLiveManager.prototype = {
         /* milliseconds */
         startLive: null,
         endLive: null,
-        width: 900,
-        height: 600,
         buttonContainer: $('#livemanagerbutton'),
         livespeakerContainer: $('#livespeaker'),
         player: null,
@@ -55,15 +53,9 @@ $.uce.PseudoLiveManager.prototype = {
     },
     _isClosed: true,
     _playerLoop: null,
-    
-    redimensionOverlay: function(width, height) {
-        this.element.css("height", height);
-        this.element.css("width", width); 
-    },
 
     _create: function() {
         this.element.addClass("ui-pseudolivemanager-overlay");
-        this.redimensionOverlay(this.options.width, this.options.height);
         var that = this;
         this.options.uceclient.user.can(
             this.options.uceclient.uid, 
@@ -73,9 +65,7 @@ $.uce.PseudoLiveManager.prototype = {
             "localhost",
             function(err, result, xhr){
                 if(result===true) {
-                    that.options.buttonContainer = that.options.buttonContainer.show().button({
-                        text: true
-                    });
+                    that.options.buttonContainer = that.options.buttonContainer.show();
                     that._updateManagerButton();
                 }
         });
@@ -173,7 +163,7 @@ $.uce.PseudoLiveManager.prototype = {
         this.options.buttonContainer.unbind('click');
         var that = this;
         if(this._isClosed===true) {
-            $(".ui-button-text", this.options.buttonContainer).text("Open the Pseudo Live Now !");
+            this.options.buttonContainer.text("Open the Pseudo Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 // TODO schedule time
@@ -185,7 +175,7 @@ $.uce.PseudoLiveManager.prototype = {
                 });
             });
         } else {
-            $(".ui-button-text", this.options.buttonContainer).text("Close the Pseudo Live Now !");
+            this.options.buttonContainer.text("Close the Pseudo Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 // TODO schedule time
@@ -199,10 +189,6 @@ $.uce.PseudoLiveManager.prototype = {
     destroy: function() {
         this.element.find('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
-    },
-    setSize: function() {
-        this.element.width(getOverlayWidth());
-		this.element.height(getOverlayHeight());
     }
 };
 

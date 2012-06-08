@@ -34,8 +34,6 @@ $.uce.LiveManager.prototype = {
         /* milliseconds */
         startLive: null,
         endLive: null,
-        width: 900,
-        height: 600,
         buttonContainer: $('#livemanagerbutton'),
         livespeakerContainer: $('#livespeaker'),
         autoOpenInterval: 3000
@@ -48,15 +46,9 @@ $.uce.LiveManager.prototype = {
         "livemanager.live.close"      : "_handleClose"
     },  
     _isClosed: true,
-    
-    redimensionOverlay: function(width, height) {
-        this.element.css("height", height);
-        this.element.css("width", width); 
-    },
 
     _create: function() {
         this.element.addClass("ui-livemanager-overlay");
-        this.redimensionOverlay(this.options.width, this.options.height);
         var that = this;
         this.options.uceclient.user.can(
 			this.options.uceclient.uid, 
@@ -66,9 +58,7 @@ $.uce.LiveManager.prototype = {
 			"localhost",
 			function(err, result, xhr){
 				if(result===true) {
-					that.options.buttonContainer = that.options.buttonContainer.show().button({
-						text: true
-					});
+					that.options.buttonContainer = that.options.buttonContainer.show();
 					that.handleManagerButton();
 				}
         });
@@ -118,7 +108,7 @@ $.uce.LiveManager.prototype = {
         this.options.buttonContainer.unbind('click');
         var that = this;
         if(this._isClosed===true) {
-            $(".ui-button-text", this.options.buttonContainer).text("Open the Live Now !");
+            this.options.buttonContainer.text("Open the Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 that.options.ucemeeting.push('livemanager.live.open', {}, function(){
@@ -126,7 +116,7 @@ $.uce.LiveManager.prototype = {
                 });
             });
         } else {
-            $(".ui-button-text", this.options.buttonContainer).text("Close the Live Now !");
+            this.options.buttonContainer.text("Close the Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 that.options.ucemeeting.push('livemanager.live.close', {}, function(){
@@ -159,10 +149,6 @@ $.uce.LiveManager.prototype = {
         window.clearInterval(this._autoOpenCloseLoop);
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
     },
-    setSize: function() {
-        this.element.width(getOverlayWidth());
-		this.element.height(getOverlayHeight());
-    }
 };
 
 if($.uce.widget!==undefined) {
