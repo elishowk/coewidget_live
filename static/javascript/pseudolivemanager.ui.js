@@ -65,8 +65,10 @@ $.uce.PseudoLiveManager.prototype = {
             "localhost",
             function(err, result, xhr){
                 if(result===true) {
-                    that.options.buttonContainer = that.options.buttonContainer.show();
+                    that.options.buttonContainer.show();
                     that._updateManagerButton();
+                } else {
+                    that.options.buttonContainer.hide();
                 }
         });
         // TODO manual player synchro

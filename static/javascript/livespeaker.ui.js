@@ -56,6 +56,8 @@ $.uce.LiveSpeaker.prototype = {
                 function(err, result, xhr){
                     if(result===true) {
                         that.initSpeakerInput();
+                    } else {
+                        that.options.speakerformContainer.hide();
                     }
             });
         }
