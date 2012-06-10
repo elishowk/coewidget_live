@@ -1,10 +1,10 @@
 /* Livespeakerform */
 
-#livespeakerform {
+.ui-livespeaker-form {
     display: none;
 }
 
-.live-form-comment{
+.live-form-comment {
     left: 22px;
 }
 
@@ -37,19 +37,36 @@
     top: 30px;
 }
 
-/* Boutons */
-
-#livemanagebutton {
-    display: none;
-}
-.ui-livemanager-banner {
-    display: none;
-}
-.ui-livemanager-banner-onair {
-    display: block;
-}
-
 .ui-livemanager-button {
+    border:hidden;
+    background-color: #6D168B;
+    background-image: linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
+    background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
+    background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
+    background-image: -ms-linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
+    border-radius: 5px;
+    box-shadow: 0 0 1px #000;
+    color: #F2CDFF;
+    font-family: 'HelveticaNeueW01-87HvCn 692734';
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+/* live manager */
+
+.ui-livemanager {
+    z-index: 2500;
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.ui-livemanager-banner {
+    border:hidden;
     background-color: #6D168B;
     background-image: linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
     background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, .1) 10%, rgba(255, 255, 255, .1) 100%);
@@ -62,8 +79,51 @@
     float: left;
     font-family: 'HelveticaNeueW01-87HvCn 692734';
     font-size: 18px;
-    height: 25px;
-    width: 120%;
     text-align: center;
-    cursor: pointer;
+    display: none;
+}
+
+.ui-livemanager-banner-onair {
+    display: block;
+}
+
+#livemanagerclock {
+    float:right;
+    padding-right: 10px;
+    padding-top: 5px;
+    position:relative;
+    font-family:'HelveticaNeueW01-97Blac';
+	font-size: 38px;
+}
+#livemanagerclock:hover {
+    color:#74187c
+}
+
+.ui-livespeaker {
+    position: absolute;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+
+.ui-livespeaker-display {
+    float:none;
+    margin:10px;
+}
+
+.ui-livespeaker-display h3 {
+    font-family:'HelveticaNeueW01-87HvCn 692734';
+    font-size:38px;
+    font-weight:100; 
+}
+
+/* pseudo live manager */
+
+.ui-livemanager-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+.ui-pseudolivemanager-overlay {
+    background: rgba(0, 0, 0, 0.8);
 }
