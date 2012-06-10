@@ -38,6 +38,7 @@ $.uce.LiveClock.prototype = {
     },
     /*
      * UCEngine events listening
+     * TODO parameters from controller to select whether live or pseudolive
      */
     meetingsEvents: {
         "pseudolivemanager.live.open"    : "_handleOpen",

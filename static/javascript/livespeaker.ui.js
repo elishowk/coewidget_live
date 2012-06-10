@@ -31,17 +31,10 @@ $.uce.LiveSpeaker.prototype = {
         "livemanager.live.open"       : "_handleOpen",
         "livemanager.live.close"      : "_handleClose"
     },
-    redimensionOverlay: function(width, height) {
-        this.element.css("height", height);
-        this.element.css("width", width);
-        this.element.children(".ui-livespeaker-display").css("height", height - this.element.css("margin-top") - this.element.css("margin-bottom"));
-        this.element.children(".ui-livespeaker-display").css("width", width - this.element.css("margin-left") - this.element.css("margin-right"));
-    },
     /*
      * UI initialize
      */
     _create: function() {
-        this.redimensionOverlay(this.options.width, this.options.height);
         if(this.options.userCanSpeak) {
             this.initSpeakerInput();
         } else {
