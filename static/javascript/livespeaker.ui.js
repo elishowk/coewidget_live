@@ -154,8 +154,8 @@ $.uce.LiveSpeaker.prototype = {
      * Main function sending post to other planets
      */
     sharePost: function(metadata) {
-        var toFacebook = ($('.timeline_service_icons > #livespeakerfacebook').hasClass('dim') === false);
-        var toTwitter = ($('.timeline_service_icons > #livespeakertwitter').hasClass('dim') === false);
+        var toFacebook = ($('#livespeakerform #ui-postform-share-facebook').hasClass('dim') === true);
+        var toTwitter = ($('#livespeakerform #ui-postform-share-twitter').hasClass('dim') === true);
         if(toTwitter===true && window.twttr !== undefined) {
             var windowOptions = "scrollbars=yes,resizable=yes,toolbar=no,location=yes,width=450,height=500,top=300,left=400";
             var twpublish = {
