@@ -35,6 +35,7 @@ $.uce.LiveSpeaker.prototype = {
      * UI initialize
      */
     _create: function() {
+        this.show();
         if(this.options.userCanSpeak) {
             this.initSpeakerInput();
         } else {
