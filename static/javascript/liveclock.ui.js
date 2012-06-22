@@ -46,44 +46,66 @@ $.uce.LiveClock.prototype = {
         "livemanager.live.open"          : "_handleOpen",
         "livemanager.live.close"         : "_handleClose"
     },
-    _isClosed: true,
     _clockLoop: null,
-
-    _create: function() {
-        this._refreshServerTime();
-        var that = this;
-        this._clockLoop = window.setInterval(function(){
-            that._refreshServerTime();
-        }, this.options.updateInterval);
-	},
+    _fakeClockLoop: null,
     /*
-     * GET time
+     * Start by fetching time data from server
+     */
+    _create: function() {
+        this._startClock();
+    },
+    /*
+     * Fetches server time
+     * then starts the fake time increment
+     * while waiting for the next server time request
+     */
+    _startClock: function() {
+        this._refreshServerTime();
+        if(this._clockLoop===null) {
+            var that = this;
+            this._clockLoop = window.setInterval(function(){
+                that._refreshServerTime();
+                }, this.options.updateInterval);
+        }
+    },
+    /*
+     * GET time request
      */
     _refreshServerTime: function(){
         this.options.uceclient.time.get($.proxy(this._incrementTime, this));
     },
     /*
-     * time increment and refresh after a while
+     * increment time from server, use with care
      */
     _incrementTime: function(err, result, xhr) {
         if(err===null) {
+            if(this._fakeClockLoop!==null) {
+    	        window.clearInterval(this._fakeClockLoop);
+	            this._fakeClockLoop = null;
+            }
             this.element.data("time", result);
-            this._updateDisplay();
+            this._fakeIncrementTime();
         }
     },
-	getLiveClock: function(){
-		return this.element.data("time");			  
-	},
+    /* 
+     * Public method returning current time
+     * in milliseconds
+     */
+    getLiveClock: function(){
+        return this.element.data("time");              
+    },
     /*
-    * Updates the display again and again
+    * Updates the time with a fake interval
+    * between to request from the server
     */
-    _updateDisplay: function() {
-        if(this._isClosed===false) {
-            this.element.addClass("ui-livemanager-banner-onair");
-            this._stopClock();
-        } else {
-            this.element.removeClass("ui-livemanager-banner-onair");
-            this._updateClock(this.element.data("time"));
+    _fakeIncrementTime: function() {
+        if(this._fakeClockLoop===null) {
+            var that = this;
+            this._fakeClockLoop = window.setInterval(function() {
+                var data = that.element.data();
+                data.time += 1000;
+                that._fakeIncrementTime();
+            } , 1000);
         }
     },
     /*
@@ -94,11 +116,10 @@ $.uce.LiveClock.prototype = {
         if(event.metadata.unixtime) {
             this._scheduledStart = true;
             this.options.startLive = event.metadata.unixtime;
-        } else {
-            this._scheduledStart = false;
-            this.options.startLive = event.datetime;
         }
-        this._isClosed = false;
+        this.element.addClass("ui-livemanager-banner-onair");
+        this.element.show();
+        this._startClock();
     },
     /*
      * UCE event handler
@@ -107,36 +128,20 @@ $.uce.LiveClock.prototype = {
         if(event.metadata.unixtime) {
             this._scheduledClose = true;
             this.options.endLive = event.metadata.unixtime;
-        } else {
-            this._scheduledClose = false;
-            this.options.endLive = event.datetime;
         }
-        this._isClosed = true;
+        this.element.removeClass("ui-livemanager-banner-onair");
+        this.element.hide();
     },
 
-    /*
-     * a clock that displays the time remaining
-     */
-    _updateClock: function(servertime) {
-        // TODO alos use it when there's scheduledClose
-        if (typeof this.options.startLive === "number" && this._scheduledStart===true) {
-            // TODO
-            /* this.element.countdown({
-                until: new Date(servertime - this.options.startLive)
-            });*/
-            return;
-        }
-    },
-    /*
-     * Dumps the clock
-     */
-    _stopClock: function() {
-        //this.element.html("");
-    },
 
     destroy: function() {
+        if(this._fakeClockLoop!==null) {
+            window.clearInterval(this._fakeClockLoop);
+            this._fakeClockLoop = null;
+        }
         if(this._clockLoop!==null) {
             window.clearInterval(this._clockLoop);
+            this._clockLoop = null;
         }
         this.element.find('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy

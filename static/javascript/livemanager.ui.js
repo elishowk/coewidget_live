@@ -36,6 +36,7 @@ $.uce.LiveManager.prototype = {
         endLive: null,
         buttonContainer: $('#livemanagerbutton'),
         livespeakerContainer: $('#livespeaker'),
+        liveclock: null,
         autoOpenInterval: 3000
     },
     /*
@@ -80,7 +81,7 @@ $.uce.LiveManager.prototype = {
 	 * UCE event handler
 	 */
     _handleOpen: function(event) {
-        this.options.startLive = event.datetime;
+        this.options.startLive = event.metadata.unixtime;
         this.options.endLive = null;
         this._isClosed = false;
         this.element.removeClass("ui-livemanager-overlay");
@@ -91,7 +92,7 @@ $.uce.LiveManager.prototype = {
 	 * UCE event handler
 	 */
     _handleClose: function(event) {
-        this.options.endLive = event.datetime;
+        this.options.endLive = event.metadata.unixtime;
         this._isClosed = true;
         this.element.addClass("ui-livemanager-overlay");
         this.element.show();
@@ -111,16 +112,22 @@ $.uce.LiveManager.prototype = {
             this.options.buttonContainer.text("Open the Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
-                that.options.ucemeeting.push('livemanager.live.open', {}, function(){
-                    //console.log("opened the live !");
+                var time = that.options.liveclock.getLiveClock();
+                that.options.ucemeeting.push('livemanager.live.open', {
+                    unixtime: time
+                }, function(){
+                    alert("you opened the live !");
                 });
             });
         } else {
             this.options.buttonContainer.text("Close the Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
-                that.options.ucemeeting.push('livemanager.live.close', {}, function(){
-                    console.log("closed the live !");
+                var time = that.options.liveclock.getLiveClock();
+                that.options.ucemeeting.push('livemanager.live.close', {
+                    unixtime: time
+                }, function(){
+                    alert("you closed the live !");
                 });
             });
         }
