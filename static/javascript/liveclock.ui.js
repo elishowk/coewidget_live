@@ -3,7 +3,6 @@
 *  depends :
 *  * ucewidget.js
 *  * jquery UI
-*  * a player uce widget
 *
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
@@ -34,7 +33,8 @@ $.uce.LiveClock.prototype = {
         /* milliseconds */
         startLive: null,
         endLive: null,
-        updateInterval: 15000
+        updateServerTimeInterval: 15000,
+        updateTimeInterval: 1000
     },
     /*
      * UCEngine events listening
@@ -65,7 +65,7 @@ $.uce.LiveClock.prototype = {
             var that = this;
             this._clockLoop = window.setInterval(function(){
                 that._refreshServerTime();
-                }, this.options.updateInterval);
+                }, this.options.updateServerTimeInterval);
         }
     },
     /*
@@ -103,9 +103,9 @@ $.uce.LiveClock.prototype = {
             var that = this;
             this._fakeClockLoop = window.setInterval(function() {
                 var data = that.element.data();
-                data.time += 1000;
+                data.time += that.options.updateTimeInterval;
                 that._fakeIncrementTime();
-            } , 1000);
+            } , this.options.updateTimeInterval);
         }
     },
     /*
