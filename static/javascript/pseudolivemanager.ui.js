@@ -117,8 +117,6 @@ $.uce.PseudoLiveManager.prototype = {
         this.options.endLive = null;
         if(event.metadata.unixtime) {    
             this.options.startLive = event.metadata.unixtime;
-        } else {
-            this.options.startLive = event.datetime;
         }
         this._isClosed = false;
         this._updateManagerButton();
@@ -141,8 +139,6 @@ $.uce.PseudoLiveManager.prototype = {
     _handleClose: function(event) {
         if(event.metadata.unixtime) {
             this.options.endLive = event.metadata.unixtime;
-        } else {
-            this.options.endLive = event.datetime;
         }
         this._isClosed = true;
         this._updateManagerButton();
