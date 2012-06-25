@@ -50,6 +50,7 @@ $.uce.LiveManager.prototype = {
 
     _create: function() {
         this.element.addClass("ui-livemanager-overlay");
+        this.element.show();
         var that = this;
         this.options.uceclient.user.can(
 			this.options.uceclient.uid, 
