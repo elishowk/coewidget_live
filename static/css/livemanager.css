@@ -53,6 +53,7 @@
     font-size: 18px;
     text-align: center;
     cursor: pointer;
+    margin-top: 10px
 }
 
 
@@ -82,6 +83,7 @@
     font-size: 18px;
     text-align: center;
     display: none;
+    margin-top: 10px;
 }
 
 #liveheader {
