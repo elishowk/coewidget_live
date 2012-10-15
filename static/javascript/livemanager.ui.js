@@ -37,6 +37,7 @@ $.uce.LiveManager.prototype = {
         buttonContainer: $('#livemanagerbutton'),
         livespeakerContainer: $('#livespeaker'),
         liveclock: null,
+        userCanManage: false,
         autoOpenInterval: 3000
     },
     /*
@@ -51,19 +52,12 @@ $.uce.LiveManager.prototype = {
     _create: function() {
         this.element.addClass("ui-livemanager-overlay");
         this.element.show();
-        var that = this;
-        this.options.uceclient.user.can(
-			this.options.uceclient.uid, 
-			"add",
-			"event",
-			{type: "livemanager.live.open"},
-			"localhost",
-			function(err, result, xhr){
-				if(result===true) {
-					that.options.buttonContainer = that.options.buttonContainer.show();
-					that.handleManagerButton();
-				}
-        });
+        if(this.options.userCanManage===true) {
+            that.options.buttonContainer = that.options.buttonContainer.show();
+            that.handleManagerButton();
+        } else {
+            this.options.buttonContainer.hide();
+        }
         // TODO implement scheduled open and close live
         /*if(typeof this.options.startLive === "number" || typeof this.options.endLive === "number") {
             $(".ui-button-text", this.options.buttonContainer).append(
@@ -110,26 +104,36 @@ $.uce.LiveManager.prototype = {
         this.options.buttonContainer.unbind('click');
         var that = this;
         if(this._isClosed===true) {
-            this.options.buttonContainer.text("Open the Live Now !");
+            this.options.buttonContainer.text("Open the Pseudo Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
-                var time = that.options.liveclock.getLiveClock();
-                that.options.ucemeeting.push('livemanager.live.open', {
-                    unixtime: time
-                }, function(){
-                    alert("you opened the live !");
-                });
+                // TODO schedule time
+                if( window.confirm("Are you sure that you want to open this live ? The video broadcast would be started immediately if you do so.") ) {
+                    var time = that.options.liveclock.getLiveClock();
+                    that.options.ucemeeting.push('livemanager.live.open', {
+                        unixtime: time
+                    }, function(){
+                        alert("you opened the live ! At the end of your broadcast, please click once again on the same button to close and hide the video");
+                    });
+                } else {
+                    window.alert("Opening canceled, the video broadcast is not started...");
+                }
             });
         } else {
-            this.options.buttonContainer.text("Close the Live Now !");
+            this.options.buttonContainer.text("Close the Pseudo Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
-                var time = that.options.liveclock.getLiveClock();
-                that.options.ucemeeting.push('livemanager.live.close', {
-                    unixtime: time
-                }, function(){
-                    alert("you closed the live !");
-                });
+                // TODO schedule time
+                if( window.confirm("Are you sure that you want to close this live ? The video broadcast would be stopped immediately if you do so.") ) {
+                    var time = that.options.liveclock.getLiveClock();
+                    that.options.ucemeeting.push('livemanager.live.close', {
+                        unixtime: time
+                    }, function(){
+                        window.alert("You closed the live ! Please do not re-open it another time.");
+                    });
+                } else {
+                    window.alert("Closing canceled, the video broadcast continues...");
+                }
             });
         }
     },
