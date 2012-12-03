@@ -7,7 +7,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   LiveClock widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -80,19 +80,19 @@ $.uce.LiveClock.prototype = {
     _incrementTime: function(err, result, xhr) {
         if(err===null) {
             if(this._fakeClockLoop!==null) {
-    	        window.clearInterval(this._fakeClockLoop);
-	            this._fakeClockLoop = null;
+                window.clearInterval(this._fakeClockLoop);
+                this._fakeClockLoop = null;
             }
             this.element.data("time", result);
             this._fakeIncrementTime();
         }
     },
-    /* 
+    /*
      * Public method returning current time
      * in milliseconds
      */
     getLiveClock: function(){
-        return this.element.data("time");              
+        return this.element.data("time");
     },
     /*
     * Updates the time with a fake interval
@@ -102,9 +102,8 @@ $.uce.LiveClock.prototype = {
         if(this._fakeClockLoop===null) {
             var that = this;
             this._fakeClockLoop = window.setInterval(function() {
-                var data = that.element.data();
-                data.time += that.options.updateTimeInterval;
-                that._fakeIncrementTime();
+                var time = that.element.data('time');
+                that.element.data('time', time + that.options.updateTimeInterval);
             } , this.options.updateTimeInterval);
         }
     },
@@ -125,7 +124,7 @@ $.uce.LiveClock.prototype = {
      * UCE event handler
      */
     _handleClose: function(event) {
-        if(event.metadata.unixtime) {
+        if (event.metadata.unixtime) {
             this._scheduledClose = true;
             this.options.endLive = event.metadata.unixtime;
         }
