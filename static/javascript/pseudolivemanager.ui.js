@@ -8,7 +8,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   PseudoLiveManager widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -42,7 +42,7 @@ $.uce.PseudoLiveManager.prototype = {
         seekButton: null,
         updatePlayerInterval: 30000,
         liveclock: null,
-        maxPlayerDiff: 60,
+        maxPlayerDiff: 30,
         userCanManage: false
     },
     /*
@@ -107,7 +107,7 @@ $.uce.PseudoLiveManager.prototype = {
      */
     _handleOpen: function(event) {
         this.options.endLive = null;
-        if(event.metadata.unixtime) {    
+        if(event.metadata.unixtime) {
             this.options.startLive = event.metadata.unixtime;
         }
         this._isClosed = false;
