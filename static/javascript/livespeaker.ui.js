@@ -40,20 +40,6 @@ $.uce.LiveSpeaker.prototype = {
             this.initSpeakerInput();
         } else {
             this.options.speakerformContainer.hide();
-            var that = this;
-            this.options.uceclient.user.can(
-                this.options.uceclient.uid, 
-                "add",
-                "event",
-                {type: "livespeaker.message.new"},
-                "localhost",
-                function(err, result, xhr){
-                    if(result===true) {
-                        that.initSpeakerInput();
-                    } else {
-                        that.options.speakerformContainer.hide();
-                    }
-            });
         }
     },
     _newAnnoucement: function(event) {

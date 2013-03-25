@@ -8,7 +8,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   PseudoLiveManager widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -42,7 +42,8 @@ $.uce.PseudoLiveManager.prototype = {
         seekButton: null,
         updatePlayerInterval: 30000,
         liveclock: null,
-        maxPlayerDiff: 60
+        maxPlayerDiff: 30,
+        userCanManage: false
     },
     /*
      * UCEngine events listening
@@ -57,22 +58,13 @@ $.uce.PseudoLiveManager.prototype = {
     _create: function() {
         this.element.addClass("ui-pseudolivemanager-overlay");
         this.element.show();
-        var that = this;
-        this.options.uceclient.user.can(
-            this.options.uceclient.uid, 
-            "add",
-            "event",
-            {type: "pseudolivemanager.live.open"},
-            "localhost",
-            function(err, result, xhr){
-                if(result===true) {
-                    that.options.buttonContainer.show();
-                    that._updateManagerButton();
-                } else {
-                    that.options.buttonContainer.hide();
-                }
-        });
-        // TODO manual player synchro
+        if(this.options.userCanManage===true) {
+            this.options.buttonContainer.show();
+            this._updateManagerButton();
+        } else {
+            this.options.buttonContainer.hide();
+        }
+        // TODO a manual button to reset the player synchro
         /*if(this.options.seekButtonActive===true && this.options.seekButton !== null) {
             this.options.uceclient.time.get(function(err, result, xhr) {
                 that.options.seekButton.live("click", function(event){
@@ -115,7 +107,7 @@ $.uce.PseudoLiveManager.prototype = {
      */
     _handleOpen: function(event) {
         this.options.endLive = null;
-        if(event.metadata.unixtime) {    
+        if(event.metadata.unixtime) {
             this.options.startLive = event.metadata.unixtime;
         }
         this._isClosed = false;
@@ -166,21 +158,29 @@ $.uce.PseudoLiveManager.prototype = {
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 // TODO schedule time
-                var time = that.options.liveclock.getLiveClock();
-                that.options.ucemeeting.push('pseudolivemanager.live.open', {
-                    unixtime: time
-                }, function(){
-                    alert("you opened the live !");
-                });
+                if( window.confirm("Are you sure that you want to open this live ? The video broadcast would be started immediately if you do so.") ) {
+                    var time = that.options.liveclock.getLiveClock();
+                    that.options.ucemeeting.push('pseudolivemanager.live.open', {
+                        unixtime: time
+                    }, function(){
+                        alert("you opened the live ! At the end of your broadcast, please click once again on the same button to close and hide the video");
+                    });
+                } else {
+                    window.alert("Opening canceled, the video broadcast is not started...");
+                }
             });
         } else {
             this.options.buttonContainer.text("Close the Pseudo Live Now !");
             this.options.buttonContainer.unbind('click');
             this.options.buttonContainer.click(function(){
                 // TODO schedule time
-                that.options.ucemeeting.push('pseudolivemanager.live.close', {}, function(){
-                    alert("you closed the live !");
-                });
+                if( window.confirm("Are you sure that you want to close this live ? The video broadcast would be stopped immediately if you do so.") ) {
+                    that.options.ucemeeting.push('pseudolivemanager.live.close', {}, function(){
+                        window.alert("You closed the live ! Please do not re-open it another time.");
+                    });
+                } else {
+                    window.alert("Closing canceled, the video broadcast continues...");
+                }
             });
         }
     },
